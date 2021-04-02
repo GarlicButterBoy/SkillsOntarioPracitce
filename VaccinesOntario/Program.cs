@@ -7,71 +7,12 @@ namespace VaccinesOntario
     {
         static void Main(string[] args)
         {
-            //Read the lines from the file, seperated by newline
-            string[] lines = Properties.Resources.Vaccines.Split('\n');
-            Vaccine[] vaccines = new Vaccine[lines.Length];
-            //iterate through the file
-            foreach (string line in lines)
-            {
-                //initialize a counter and array of vaccines
-                int vacCounter = 0;
-                
+            
 
-                Console.WriteLine(line);
-                  string[] columns = line.Split(',');
-                int counter = 0;
-               // Vaccine tempVaccine = new Vaccine();
-                 foreach (string column in columns)
-                 {
-                    if (column == "")
-                    {
-                        break;
-                    }
-                     Console.WriteLine(column);
+            Vaccine[] vaccines = ReadFile();
 
-                    if (counter == 0)
-                    {
-                        //Add SKU Number
-                        vaccines[vacCounter].setSKU(int.Parse(column));
-                    }
-                    else if (counter == 1)
-                    {
-                        //Add Vaccine Name
-                        vaccines[vacCounter].setName(column);
-                    }
-                    else if (counter == 2)
-                    {
-                        //Add Unit Cost
-                        vaccines[vacCounter].setCost(float.Parse(column));
-                    }
-                    else if (counter == 3)
-                    {
-                        //Add Quantity
-                        vaccines[vacCounter].setQuantity(int.Parse(column));
-                    }
-                    else if (counter == 4)
-                    {
-                        //Add Expiry
-                        DateTime tempDate = new DateTime();
-                        if (DateTime.TryParseExact(column, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, 
-                            System.Globalization.DateTimeStyles.None, out tempDate))
-                        {
-                            vaccines[vacCounter].setDate(tempDate);
-                        }
-                    }
-                    else if (counter == 5)
-                    {
-                        //Add Instructions
-                        vaccines[vacCounter].setInstructions(column);
-                    }
-                    counter++;
-                 }
-                
-                vacCounter++;
-            }
-
-            vaccines[0].ToString();
-            vaccines[1].ToString();
+          Console.WriteLine(vaccines[0].ToString());
+           Console.WriteLine(vaccines[1].ToString());
             /*
 
             bool showMenu = true;
@@ -148,10 +89,127 @@ namespace VaccinesOntario
             Environment.Exit(0);
         }
 
-     //   public Vaccine ReadFile(string path) //should be string of path to resources file
-     //   {
-            
-      //  }
+        public static Vaccine[] ReadFile() //should be string of path to resources file
+        {
+            const int NUM_OF_COLUMNS = 6;
+            int lineCounter = 0;
+            string line;
+            StreamReader csvFile = new StreamReader(@"D:\Computer Programmer DC\Skills Ontario Stuff\vaccines.csv");
+            Vaccine[] vaccines = new Vaccine[2]; //Array to store the vaccines
+
+            while ((line = csvFile.ReadLine()) != null)
+            {
+                Console.WriteLine(line);
+                int columnCounter = 0;
+                string[] columns = line.Split(',');//Take each line and break it into the relevant data
+                Vaccine tempVaccine = new Vaccine(); //tempVaccine used to store all the data before adding to the array of vaccines
+                //Vaccine[] vaccines = new Vaccine[2]; //Array to store the vaccines
+
+                while (columnCounter <= NUM_OF_COLUMNS)
+                {
+                    if (columnCounter == 0)
+                    {
+                        tempVaccine.setSKU(int.Parse(columns[columnCounter])); //Add SKU Number
+                    }
+                    else if (columnCounter == 1)
+                    {
+                        tempVaccine.setName(columns[columnCounter]);//Add Vaccine Name
+                    }
+                    else if (columnCounter == 2)
+                    {
+                        tempVaccine.setCost(float.Parse(columns[columnCounter])); //Add Unit Cost
+                    }
+                    else if (columnCounter == 3)
+                    {
+                        tempVaccine.setQuantity(int.Parse(columns[columnCounter])); //Add Quantity
+                    }
+                    else if (columnCounter == 4)
+                    {
+                        //Add Expiry
+                        DateTime tempDate = new DateTime();
+                        if (DateTime.TryParseExact(columns[columnCounter], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out tempDate))
+                        {
+                            tempVaccine.setDate(tempDate);
+                        }
+                    }
+                    else if (columnCounter == 5)
+                    {
+                        tempVaccine.setInstructions(columns[columnCounter]); //Add Instructions
+                    }
+                    columnCounter++;
+                }
+                vaccines[lineCounter] = tempVaccine;
+                lineCounter++;
+            }
+            /*
+             //Read the lines from the file, seperated by newline
+            string[] lines = Properties.Resources.Vaccines.Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                Console.WriteLine(i.ToString() + " " + lines[i]);
+            }
+            Vaccine[] vaccines = new Vaccine[lines.Length]; //Array to store the vaccines
+            Vaccine tempVaccine = new Vaccine(); //tempVaccine used to store all the data before adding to the array of vaccines
+            //iterate through the file
+            int vacCount; //counter to keep track of the number of vaccines in the array
+            for (vacCount = 0; vacCount < lines.Length; vacCount++)
+            {
+                foreach (string line in lines)
+                {
+                    string[] columns = line.Split(','); //Take each line and break it into the relevant data
+                    int count;
+                    for (count = 0; count < columns.Length; count++)
+                    {
+                        foreach (string column in columns)
+                        {
+                            if (columns[count] == "")
+                            {
+                                break;
+                            }
+                            if (count == 0)
+                            {
+                                tempVaccine.setSKU(int.Parse(columns[count])); //Add SKU Number
+                            }
+                            else if (count == 1)
+                            {
+                                tempVaccine.setName(columns[count]);//Add Vaccine Name
+                            }
+                            else if (count == 2)
+                            {
+                                tempVaccine.setCost(float.Parse(columns[count])); //Add Unit Cost
+                            }
+                            else if (count == 3)
+                            {
+                                tempVaccine.setQuantity(int.Parse(columns[count])); //Add Quantity
+                            }
+                            else if (count == 4)
+                            {
+                                //Add Expiry
+                                DateTime tempDate = new DateTime();
+                                if (DateTime.TryParseExact(columns[count], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture,
+                                    System.Globalization.DateTimeStyles.None, out tempDate))
+                                {
+                                    tempVaccine.setDate(tempDate);
+                                }
+                            }
+                            else if (count == 5)
+                            {
+                                tempVaccine.setInstructions(columns[count]); //Add Instructions
+                            }
+
+                        }
+                        
+                    }
+                    vaccines[vacCount] = tempVaccine;
+                }
+                
+            }
+        */
+            return vaccines; 
+        }
+
+
 
     }//End of Main
 }//End of Namespace

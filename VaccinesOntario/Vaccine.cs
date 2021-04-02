@@ -106,5 +106,12 @@ namespace VaccinesOntario
 
             return tempString;
         }
+
+        //Overrides
+       // public static Vaccine operator =(Vaccine a)
+     //   {
+      //      Vaccine temp = new Vaccine(a.getSKU, a.getName, a.getCost, a.getQuantity, a.getDate, a.getInstructions);
+       //     return temp;
+      //  }
     }
 }
