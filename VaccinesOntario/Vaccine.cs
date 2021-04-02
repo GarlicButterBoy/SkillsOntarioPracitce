@@ -107,6 +107,15 @@ namespace VaccinesOntario
             return tempString;
         }
 
+        public string FileString()
+        {
+            string tempString = "";
+
+            tempString += getSKU().ToString() + "," + getName() + "," + getCost().ToString() + "," + getQuantity().ToString() + "," + getDate().Date.ToString() + "," + getInstructions();
+
+            return tempString;
+        }
+
         //Overrides
        // public static Vaccine operator =(Vaccine a)
      //   {

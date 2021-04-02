@@ -7,13 +7,6 @@ namespace VaccinesOntario
     {
         static void Main(string[] args)
         {
-            
-
-            Vaccine[] vaccines = ReadFile();
-
-          Console.WriteLine(vaccines[0].ToString());
-           Console.WriteLine(vaccines[1].ToString());
-            /*
 
             bool showMenu = true;
 
@@ -24,7 +17,7 @@ namespace VaccinesOntario
              showMenu = MainMenu();
             }
             
-            */
+            
         }
 
         /// <summary>
@@ -47,27 +40,27 @@ namespace VaccinesOntario
             switch (Console.ReadLine())
             {
                 case "1":
-                    Console.WriteLine("Option 1 Selected");
+                    Option1();
                     Console.ReadKey();
                     return true;
                 case "2":
-                    Console.WriteLine("Option 2 Selected");
+                    Option2();
                     Console.ReadKey();
                     return true;
                 case "3":
-                    Console.WriteLine("Option 3 Selected");
+                    Option3();
                     Console.ReadKey();
                     return true;
                 case "4":
-                    Console.WriteLine("Option 4 Selected");
+                    Option4();
                     Console.ReadKey();
                     return true;
                 case "5":
-                    Console.WriteLine("Option 5 Selected");
+                    Option5();
                     Console.ReadKey();
                     return true;
                 case "6":
-                    Console.WriteLine("Option 6 Selected");
+                    Option6();
                     Console.ReadKey();
                     return true;
                 case "0": //User Wants to close the program
@@ -92,18 +85,21 @@ namespace VaccinesOntario
         public static Vaccine[] ReadFile() //should be string of path to resources file
         {
             const int NUM_OF_COLUMNS = 6;
+            //return the number of rows
+            string[] lineCount = Properties.Resources.Vaccines.Split('\n');
+            int numberLines = lineCount.Length;
+
             int lineCounter = 0;
             string line;
             StreamReader csvFile = new StreamReader(@"D:\Computer Programmer DC\Skills Ontario Stuff\vaccines.csv");
-            Vaccine[] vaccines = new Vaccine[2]; //Array to store the vaccines
+            Vaccine[] vaccines = new Vaccine[numberLines]; //Array to store the vaccines
 
             while ((line = csvFile.ReadLine()) != null)
             {
-                Console.WriteLine(line);
+               // Console.WriteLine(line);
                 int columnCounter = 0;
                 string[] columns = line.Split(',');//Take each line and break it into the relevant data
                 Vaccine tempVaccine = new Vaccine(); //tempVaccine used to store all the data before adding to the array of vaccines
-                //Vaccine[] vaccines = new Vaccine[2]; //Array to store the vaccines
 
                 while (columnCounter <= NUM_OF_COLUMNS)
                 {
@@ -142,74 +138,134 @@ namespace VaccinesOntario
                 vaccines[lineCounter] = tempVaccine;
                 lineCounter++;
             }
-            /*
-             //Read the lines from the file, seperated by newline
-            string[] lines = Properties.Resources.Vaccines.Split('\n');
-            for (int i = 0; i < lines.Length; i++)
-            {
-                Console.WriteLine(i.ToString() + " " + lines[i]);
-            }
-            Vaccine[] vaccines = new Vaccine[lines.Length]; //Array to store the vaccines
-            Vaccine tempVaccine = new Vaccine(); //tempVaccine used to store all the data before adding to the array of vaccines
-            //iterate through the file
-            int vacCount; //counter to keep track of the number of vaccines in the array
-            for (vacCount = 0; vacCount < lines.Length; vacCount++)
-            {
-                foreach (string line in lines)
-                {
-                    string[] columns = line.Split(','); //Take each line and break it into the relevant data
-                    int count;
-                    for (count = 0; count < columns.Length; count++)
-                    {
-                        foreach (string column in columns)
-                        {
-                            if (columns[count] == "")
-                            {
-                                break;
-                            }
-                            if (count == 0)
-                            {
-                                tempVaccine.setSKU(int.Parse(columns[count])); //Add SKU Number
-                            }
-                            else if (count == 1)
-                            {
-                                tempVaccine.setName(columns[count]);//Add Vaccine Name
-                            }
-                            else if (count == 2)
-                            {
-                                tempVaccine.setCost(float.Parse(columns[count])); //Add Unit Cost
-                            }
-                            else if (count == 3)
-                            {
-                                tempVaccine.setQuantity(int.Parse(columns[count])); //Add Quantity
-                            }
-                            else if (count == 4)
-                            {
-                                //Add Expiry
-                                DateTime tempDate = new DateTime();
-                                if (DateTime.TryParseExact(columns[count], "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture,
-                                    System.Globalization.DateTimeStyles.None, out tempDate))
-                                {
-                                    tempVaccine.setDate(tempDate);
-                                }
-                            }
-                            else if (count == 5)
-                            {
-                                tempVaccine.setInstructions(columns[count]); //Add Instructions
-                            }
-
-                        }
-                        
-                    }
-                    vaccines[vacCount] = tempVaccine;
-                }
-                
-            }
-        */
+            
             return vaccines; 
         }
 
+        public static void Option1()
+        {
+            Vaccine[] vaccines = ReadFile();
+            string tempString;
+            tempString = "\nRow |  SKU  | Vaccine Name | Unit Cost | QTY | Expiry | Special Instructions\n";
+            tempString += "--------------------------------------------------------------------------\n";
 
+            for (int i = 0; i < vaccines.Length; i++)
+            {
+                tempString += " " + (i + 1).ToString() + "  |";
+                tempString += vaccines[i].getSKU().ToString() + "|";
+                tempString += vaccines[i].getName() + "       |  ";
+                tempString += vaccines[i].getCost().ToString() + "      |  ";
+                tempString += vaccines[i].getQuantity().ToString() + " | ";
+                tempString += vaccines[i].getDate().ToString() + " | ";
+                tempString += vaccines[i].getInstructions() + "\n";
+            }
+
+            Console.WriteLine(tempString);
+        }
+
+        public static void Option2()
+        {
+            Vaccine[] vaccines = ReadFile();
+            Vaccine vaccine = new Vaccine();
+            string tempSKU;
+            
+            bool flag = false;
+
+            while (!flag)
+            {
+                Console.WriteLine("Please Search for a Vaccine using a SKU Number (7 Digit Whole Number):");
+                tempSKU = Console.ReadLine();
+                int SKU;
+                if (int.TryParse(tempSKU, out SKU))
+                {
+
+                    vaccine = Array.Find(vaccines, Vaccine => Vaccine.getSKU() == SKU);
+                    vaccine.ToString();
+                    flag = true;
+                }
+                else
+                {
+                    Console.WriteLine("No Match.");
+                }
+            }
+
+            
+
+            
+
+        }
+        
+        public static void Option3()
+        {
+            Console.WriteLine("Option 3 Selected");
+            Vaccine[] vaccines = ReadFile();
+            //Console.WriteLine(vaccines.Length.ToString());
+            Vaccine newVaccine = new Vaccine();
+
+            //Create a StreamWriter
+            StreamWriter file = new StreamWriter(@"D:\Computer Programmer DC\Skills Ontario Stuff\newVaccines.csv");
+
+            //Add SKU
+            Console.Write("Please enter a 7 digit number for the SKU: ");
+            int SKU = int.Parse(Console.ReadLine());
+            newVaccine.setSKU(SKU);
+
+            //Add Name
+            Console.Write("Please enter a name: ");
+            string name = Console.ReadLine();
+            newVaccine.setName(name);
+
+            //Add Cost
+            Console.Write("Please enter a cost for the vaccine: ");
+            float cost = float.Parse(Console.ReadLine());
+            newVaccine.setCost(cost);
+
+            //Add Quantity
+            Console.Write("Please enter how many vaccines are on hand: ");
+            int quantity = int.Parse(Console.ReadLine());
+            newVaccine.setQuantity(quantity);
+
+            //Add Expiration Date
+            Console.Write("Please enter a date for expiration: ");
+            DateTime expiry = DateTime.Parse(Console.ReadLine());
+            newVaccine.setDate(expiry);
+
+            //Add Instructions
+            Console.Write("Please enter any additional instructions: ");
+            string instructions = Console.ReadLine();
+            newVaccine.setInstructions(instructions);
+
+            //Create the new Vaccine
+            //Vaccine newVaccine = new Vaccine(SKU, name, cost, quantity, expiry, instructions);
+
+            //Console.WriteLine(newVaccine.ToString());
+            vaccines[vaccines.Length - 1] = newVaccine; //Add the new vaccine to the array
+
+            //Write to the new CSV
+            for (int i = 0; i < vaccines.Length; i++)
+            {
+                file.Write(vaccines[i].FileString());
+            }
+            
+            
+
+        }
+
+        public static void Option4()
+        {
+            Console.WriteLine("Update Vaccine's Selected");
+        }
+
+        public static void Option5()
+        {
+            Console.WriteLine("Delete Vaccine Selected");
+        }
+
+        public static void Option6()
+        {
+            Console.WriteLine("Sort Products Selected");
+
+        }
 
     }//End of Main
 }//End of Namespace
