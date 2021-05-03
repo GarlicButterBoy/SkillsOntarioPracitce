@@ -11,7 +11,7 @@ namespace VaccinesOntario
         private string name;
         private float cost;
         private int quantity;
-        private DateTime expiration;
+        private Date expiration;
         private string instructions;
 
         //Constructors
@@ -21,7 +21,7 @@ namespace VaccinesOntario
 
         }
         //Parameterized Constructor
-        public Vaccine(int SKU, string name, float cost, int quantity, DateTime expiration, string instructions)
+        public Vaccine(int SKU, string name, float cost, int quantity, Date expiration, string instructions)
         {
             setSKU(SKU);
             setName(name);
@@ -72,12 +72,12 @@ namespace VaccinesOntario
             this.quantity = quantity;
         }
 
-        public DateTime getDate()
+        public Date getDate()
         {
-            return expiration.Date;
+            return expiration;
         }
 
-        public void setDate(DateTime date)
+        public void setDate(Date date)
         {
             expiration = date;
         }
@@ -107,11 +107,16 @@ namespace VaccinesOntario
             return tempString;
         }
 
+        public string TableString()
+        {
+            return String.Format("{0, -7} {1, -14} {2, -11:C2} {3, -5} {4, -10} {5}", SKU, name, cost, quantity, expiration, instructions);
+        }
+
         public string FileString()
         {
             string tempString = "";
 
-            tempString += getSKU().ToString() + "," + getName() + "," + getCost().ToString() + "," + getQuantity().ToString() + "," + getDate().Date.ToString() + "," + getInstructions();
+            tempString += getSKU().ToString() + "," + getName() + "," + getCost().ToString() + "," + getQuantity().ToString() + "," + getDate().ToString() + "," + getInstructions();
 
             return tempString;
         }
