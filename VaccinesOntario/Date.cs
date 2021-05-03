@@ -42,6 +42,13 @@ namespace VaccinesOntario
             }
         }
 
+        public Date(DateTime date)
+        {
+            setDay(date.Day);
+            setMonth(date.Month);
+            setYear(date.Year);
+        }
+
         public Date(int day, int month, int year)
         {
             setDay(day);
@@ -86,5 +93,10 @@ namespace VaccinesOntario
         {
             return day.ToString() + "/" + month.ToString() + "/" + year.ToString();
         }
+
+        //internal int CompareTo(Date compare)
+        //{
+        //    string[] tempDate = compare.ToString().Split('/');
+        //}
     }
 }

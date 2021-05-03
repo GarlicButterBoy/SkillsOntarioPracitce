@@ -4,8 +4,11 @@ using System.Text;
 
 namespace VaccinesOntario
 {
-    class Vaccine
+    class Vaccine : IComparable
     {
+
+        public static SortBy sortBy = SortBy.Quantity;
+
         //Private Variables
         private int SKU;
         private string name;
@@ -121,11 +124,44 @@ namespace VaccinesOntario
             return tempString;
         }
 
-        //Overrides
-       // public static Vaccine operator =(Vaccine a)
-     //   {
-      //      Vaccine temp = new Vaccine(a.getSKU, a.getName, a.getCost, a.getQuantity, a.getDate, a.getInstructions);
-       //     return temp;
-      //  }
+        public virtual int CompareTo(object obj)
+        {
+            //is the argument null?
+            if (obj == null)
+            {
+                //throw exception
+                throw new ArgumentNullException("Unable to compare, object is null");
+            }
+
+            Vaccine tempVaccine = obj as Vaccine; //Convert obj to Vaccine
+
+            if (tempVaccine != null) //if the conversion worked
+            {
+                if (sortBy == SortBy.Quantity)
+                {
+                    int thisSort = this.quantity;
+                    int compare = tempVaccine.quantity;
+                    return (thisSort.CompareTo(compare));
+                }
+                else if (sortBy == SortBy.Cost)
+                {
+                    float thisSort = this.cost;
+                    float compare = tempVaccine.cost;
+                    return (thisSort.CompareTo(compare));
+                }
+                else
+                {
+
+                    DateTime thisSort = new DateTime(expiration.getDay(), expiration.getMonth(), expiration.getYear());
+                    DateTime compare = new DateTime(tempVaccine.expiration.getDay(), tempVaccine.expiration.getMonth(), tempVaccine.expiration.getYear());
+                    return (thisSort.CompareTo(compare));
+                }
+            }
+            else //conversion failed
+            {
+                throw new ArgumentException("Object being compared cannot be converted to a Vaccine");
+            }
+        }
+
     }
 }

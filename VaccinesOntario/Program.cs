@@ -33,7 +33,10 @@ namespace VaccinesOntario
         {
             Console.Clear();
 
-            Read();
+            if (vaccines.Count < 1)
+            {
+                Read();
+            }
 
             //Display Main Menu
             Console.Write("\n--------------------------------------------------------\n");
@@ -201,47 +204,56 @@ namespace VaccinesOntario
 
         public static void Option2()
         {
-            Vaccine[] vaccines = ReadFile();
-            Vaccine vaccine = new Vaccine();
+            Vaccine tempVaccine = new Vaccine();
             string tempSKU;
 
-            bool flag = false;
+            bool flag = true;
 
-            while (!flag)
+            //Get user input SKU\
+            do
             {
-                Console.WriteLine("Please Search for a Vaccine using a SKU Number (7 Digit Whole Number):");
-                tempSKU = Console.ReadLine();
-                int SKU;
-                if (int.TryParse(tempSKU, out SKU))
+                //if there are any errors
+                if (!flag)
                 {
-
-                    vaccine = Array.Find(vaccines, Vaccine => Vaccine.getSKU() == SKU);
-                    vaccine.ToString();
+                    Console.Clear();
+                    Console.WriteLine("Something went wrong, please start again...");
                     flag = true;
                 }
-                else
+
+                Console.WriteLine("Please Search for a Vaccine using a SKU Number (7 Digit Whole Number):");
+                tempSKU = Console.ReadLine();
+
+                if (tempSKU.ToString().Length != 7)
                 {
-                    Console.WriteLine("No Match.");
+                    flag = false;
+                }
+            } while (!flag);
+
+
+            //Search the List for the requested SKU
+            foreach (Vaccine vaccine in vaccines)
+            {
+                if (vaccine.getSKU() == int.Parse(tempSKU))
+                {
+                    tempVaccine = vaccine;
                 }
             }
 
-
-
-
-
+            if (tempVaccine != new Vaccine())
+            {
+                Console.WriteLine("Vaccine with SKU# " + tempSKU + " found!\n" + tempVaccine.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Vaccine with SKU# " + tempSKU + " not found!\n");
+            }
         }
 
         public static void Option3()
         {
             Console.WriteLine("Option 3 Selected");
-            //Vaccine[] vaccines = ReadFile();
-            //Console.WriteLine(vaccines.Length.ToString());
-            // Vaccine newVaccine = new Vaccine();
 
-            //Create a StreamWriter
-            // StreamWriter file = new StreamWriter(@"D:\Computer Programmer DC\Skills Ontario Stuff\newVaccines.csv");
-
-           // string userInput;
+            // string userInput;
             bool flag = true;
             string errors = "Something went wrong, please start again...\n";
 
@@ -260,7 +272,7 @@ namespace VaccinesOntario
                 {
                     Console.Clear();
 
-                    Console.WriteLine(errors); 
+                    Console.WriteLine(errors);
                     flag = true;
                 }
 
@@ -291,8 +303,6 @@ namespace VaccinesOntario
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                // newVaccine.setName(name);
 
                 //Add Cost
                 Console.Write("Please enter a cost for the vaccine: ");
@@ -304,8 +314,6 @@ namespace VaccinesOntario
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                // newVaccine.setCost(cost);
 
                 //Add Quantity
                 Console.Write("Please enter how many vaccines are on hand: ");
@@ -317,8 +325,6 @@ namespace VaccinesOntario
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                // newVaccine.setQuantity(quantity);
 
                 //Add Expiration Date
                 Console.Write("Please enter a date for expiration starting with DD: ");
@@ -344,16 +350,11 @@ namespace VaccinesOntario
                         flag = false;
                         errors += "The year must be between 2000 and 2021";
                     }
-
-                    
-                    
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                // newVaccine.setDate(expiry);
 
                 //Add Instructions
                 Console.Write("Please enter any additional instructions: ");
@@ -365,8 +366,6 @@ namespace VaccinesOntario
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                //  newVaccine.setInstructions(instructions);
             } while (!flag);
 
             if (flag)
@@ -375,35 +374,247 @@ namespace VaccinesOntario
                 vaccines.Add(new Vaccine(SKU, name, cost, quantity, expiry, instructions));
             }
 
-            //Create the new Vaccine
-            //Vaccine newVaccine = new Vaccine(SKU, name, cost, quantity, expiry, instructions);
-
-            //Console.WriteLine(newVaccine.ToString());
-            //vaccines[vaccines.Length - 1] = newVaccine; //Add the new vaccine to the array
-
-            //Write to the new CSV
-            // for (int i = 0; i < vaccines.Length; i++)
-            //{
-            //    file.Write(vaccines[i].FileString());
-            //}
-
-
+            WriteToFile();
 
         }
 
         public static void Option4()
         {
             Console.WriteLine("Update Vaccine's Selected");
+
+            Vaccine tempVaccine = new Vaccine();
+            string tempSKU;
+            string input = "";
+            bool flag = true;
+
+            //Get user input SKU\
+            do
+            {
+                //if there are any errors
+                if (!flag)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Something went wrong, please start again...");
+                    flag = true;
+                }
+
+                Console.WriteLine("Please Search for a Vaccine using a SKU Number (7 Digit Whole Number):");
+                tempSKU = Console.ReadLine();
+
+                if (tempSKU.ToString().Length != 7)
+                {
+                    flag = false;
+                }
+            } while (!flag);
+
+
+            //Search the List for the requested SKU
+            foreach (Vaccine vaccine in vaccines)
+            {
+                if (vaccine.getSKU() == int.Parse(tempSKU))
+                {
+                    tempVaccine = vaccine;
+                }
+            }
+
+            //Vaccine is found
+            if (tempVaccine != new Vaccine())
+            {
+                Console.Clear();
+                Console.WriteLine("Vaccine with SKU# " + tempSKU + " found!\n");
+
+                while ((input != "i") && (input != "d"))
+                {
+                    Console.WriteLine("Increase or Decrease Quantity? Please press i key for Increase or d key for Decrease");
+
+                    input = Console.ReadLine();
+                }
+
+                bool increase = true;
+
+                switch (input)
+                {
+                    case "i":
+                        increase = true;
+                        break;
+                    case "d":
+                        increase = false;
+                        break;
+                }
+
+                flag = false;
+                int changeAmount = 0;
+
+                if (!increase)
+                {
+                    while (!flag)
+                    {
+                        flag = true;
+                        Console.Write("Decrease quantity by: ");
+                        input = Console.ReadLine();
+
+                        try
+                        {
+                            changeAmount = int.Parse(input);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            flag = false;
+                        }
+                    }
+
+                    tempVaccine.setQuantity(tempVaccine.getQuantity() - changeAmount);
+
+                }
+                else if (increase)
+                {
+                    while (!flag)
+                    {
+                        flag = true;
+                        Console.Write("Increase quantity by: ");
+                        input = Console.ReadLine();
+
+                        try
+                        {
+                            changeAmount = int.Parse(input);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e.Message);
+                            flag = false;
+                        }
+                    }
+
+                    tempVaccine.setQuantity(tempVaccine.getQuantity() + changeAmount);
+                }
+
+                WriteToFile();
+            }
+            else
+            {
+                Console.WriteLine("Vaccine with SKU# " + tempSKU + " not found!\n");
+            }
         }
 
         public static void Option5()
         {
             Console.WriteLine("Delete Vaccine Selected");
+
+            Vaccine tempVaccine = new Vaccine();
+            string tempSKU;
+            string input = "";
+            bool flag = true;
+
+            //Get user input SKU\
+            do
+            {
+                //if there are any errors
+                if (!flag)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Something went wrong, please start again...");
+                    flag = true;
+                }
+
+                Console.WriteLine("Please Search for a Vaccine using a SKU Number (7 Digit Whole Number):");
+                tempSKU = Console.ReadLine();
+
+                if (tempSKU.ToString().Length != 7)
+                {
+                    flag = false;
+                }
+            } while (!flag);
+
+
+            //Search the List for the requested SKU
+            foreach (Vaccine vaccine in vaccines)
+            {
+                if (vaccine.getSKU() == int.Parse(tempSKU))
+                {
+                    tempVaccine = vaccine;
+                }
+            }
+
+            //Vaccine is found
+            if (tempVaccine != new Vaccine())
+            {
+                Console.Clear();
+                Console.WriteLine("Vaccine with SKU# " + tempSKU + " found!\n");
+                Console.WriteLine(tempVaccine.ToString());
+                
+
+                while ((input != "y") && (input != "n"))
+                {
+                    Console.Write("\n\nAre you sure you want to delete this? Press Y/N: ");
+                    input = Console.ReadLine();
+                }
+
+
+                switch (input)
+                {
+                    case "y":
+                        Console.WriteLine("Vaccine with SKU# " + tempSKU + " has been deleted.");
+                        vaccines.Remove(tempVaccine);
+                        break;
+                    case "n":
+                        Console.WriteLine("No Vaccine Deleted, returning to main menu");
+                        break;
+                }
+
+            }
+
         }
 
         public static void Option6()
         {
             Console.WriteLine("Sort Products Selected");
+
+            string input = "";
+
+            while ((input != "1") && (input != "2") && (input != "3"))
+            {
+                Console.Clear();
+
+                Console.Write("Sorting Options:\n1. Quantity\n2. Cost\n 3. Date\n\nYour Selection: ");
+                input = Console.ReadLine();
+            }
+
+            switch(input)
+            {
+                case "1":
+                    Vaccine.sortBy = SortBy.Quantity;
+                    break;
+                case "2":
+                    Vaccine.sortBy = SortBy.Cost;
+                    break;
+                case "3":
+                    Vaccine.sortBy = SortBy.Date;
+                    break;
+            }
+
+            vaccines.Sort();
+            WriteToFile();
+        }
+
+        public static void WriteToFile()
+        {
+            using (StreamWriter outFile = new StreamWriter(@"../../../Resources/Vaccines.csv", false))
+            {
+                foreach (Vaccine vaccine in vaccines)
+                {
+                    outFile.WriteLine(vaccine.FileString());
+                }
+            }
+        }
+
+        public static void SearchBySKU()
+        {
+
+        }
+
+        public static void AreYouSure()
+        {
 
         }
 
